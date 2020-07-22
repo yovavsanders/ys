@@ -27,16 +27,18 @@
 
 <body style='width:100%; height:95%;' scrolling='no' dir="rtl">
 <div id="app">
-    <v-app right>
+    <v-app right style="
+    background-image: url('https://yovavsanders.github.io/ys/cart.jpg');">
       <v-main>
+
         <v-container>
           <v-layout row justify-center class="ma-5">
             <v-flex xs12 sm8>
+
               <v-card>
                 <v-toolbar color="blue darken-4" dark>
                   <v-toolbar-title class="headline">רשימת קניות שלומית ויובב</v-toolbar-title>
                 </v-toolbar>
-  
                 <v-list two-line subheader>
                   <v-container>
                     <v-subheader class="headline">{{today}}</v-subheader>
@@ -71,11 +73,10 @@
               </v-card>
             </v-flex>
           </v-layout>
-        </v-container>
+        </v-container >
       </v-main>
     </v-app>
   </div>
-
 
   
 <script>
@@ -96,7 +97,6 @@
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
-      //db.settings({timestampsInSnapshots: true});
   
   
   
