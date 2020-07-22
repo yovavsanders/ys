@@ -22,7 +22,7 @@ const app = new Vue({
         newTodo: '',
         todo: [],
         todos: [],
-        today: new Date().toJSON().slice(0,10).replace("-","/").replace("-","/"),
+        today: new Date().toJSON().slice(0,10).split('-').reverse().join('/'),
         date_added: "",
         day: this.todoDay(),
         date: new Date().getDate(),
