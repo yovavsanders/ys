@@ -47,15 +47,17 @@
                     <p class="text-xs-right"><b>{{todos.length}}</b> מוצרים</p>
   
                     <v-flex xs12>
-                      <v-text-field right clearable v-model="newTodo" id="newTodo" name="newTodo" placeholder="הוספת מוצר חדש" @keyup.enter="addTodo">
-                      </v-text-field>
+                      <v-combobox right clearable v-model="newTodo" :items="historylist" id="newTodo" name="newTodo" placeholder="הוספת מוצר חדש" @keyup.enter="addTodo"
+                        :search-input.sync="search"
+                        hide-selected
+                      ></v-combobox>
                     </v-flex>
                   </v-container>
                   <v-subheader class="subheading" v-if="todos.length == 0">יש 0 מוצרים ברשימה. הוסף מוצר</v-subheader>
                   <div v-for="(todo, i) in todos">
                     <v-list-item>
                       <v-list-item-action>
-                        <v-checkbox v-model="todo.done"></v-checkbox>
+                        <v-checkbox v-model="todo.done" @change="cbxChanged(i)"></v-checkbox>
                       </v-list-item-action>
                       <v-list-item-content>
                         <v-list-item-title :class="{
@@ -64,7 +66,7 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>נוסף ב: {{todo.date_added}}</v-list-item-subtitle>
                       </v-list-item-content>
-                      <v-btn icon ripple color="red"  v-if="todo.done" @click="removeTodo(i)">
+                      <v-btn icon ripple color="red" model="todo.checked"  v-if="todo.done" @click="removeTodo(i)">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                     </v-list-item>
