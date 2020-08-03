@@ -90,7 +90,7 @@
                       :key="card.title"
                       :cols="card.flex"
                     >
-                    <v-card-title class="white--text align-center" v-text="card.title"></v-card-title>
+                    <v-card-title class="white--text align-center" v-text="card.title + ' ' + (order_dictionary[cards.indexOf(card) + '_' +card.gen])"></v-card-title>
                       <v-card>
                         <v-img
                           :src="card.src"
@@ -128,13 +128,27 @@ const app = new Vue({
         title: 'מי ראשון למקלחת?',
         vrow: false,
         cards: [
-        { title: 'אבא', src: 'yovav.jpg', flex: 12 },
-        { title: 'אמא', src: 'shlomit.jpg', flex: 12 },
-        { title: 'תגל', src: 'tagel.jpg', flex: 12 },
-        { title: 'ירדן', src: 'yarden.jpg', flex: 12 },
-        { title: 'מירון', src: 'meiron.jpg', flex: 12 },
-      ],
-      }
+          { title: 'אבא', src: 'yovav.jpg', flex: 12, gen: 'm' },
+          { title: 'אמא', src: 'shlomit.jpg', flex: 12, gen: 'f' },
+          { title: 'תגל', src: 'tagel.jpg', flex: 12, gen: 'f' },
+          { title: 'ירדן', src: 'yarden.jpg', flex: 12, gen: 'f' },
+          { title: 'מירון', src: 'meiron.jpg', flex: 12, gen: 'm'},
+          ],
+
+        order_dictionary : {
+
+          '0_m': 'ראשון',
+          '1_m': 'שני',
+          '2_m': 'שלישי',
+          '3_m': 'רביעי',
+          '4_m': 'חמישי',
+          '0_f': 'ראשונה',
+          '1_f': 'שניה',
+          '2_f': 'שלישית',
+          '3_f': 'רביעית',
+          '4_f': 'חמישית'
+          }
+        }
     },
     methods: {
 
