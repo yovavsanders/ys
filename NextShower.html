@@ -10,10 +10,6 @@
     }
     </style>
 <title>מי ראשון למקלחת</title>
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
 
 <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
 <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
@@ -38,7 +34,7 @@
           <v-layout row justify-center class="ma-5">
             <v-flex xs12 sm8>
                 <div class="my-2" center style="width:100%">
-                  <v-btn block x-large tile rounded color="purple" dark @click="Changed()"  > <h2>מי ראשון למקלחת?</h2></v-btn>
+                  <v-btn block x-large tile rounded color="purple" dark @click="Changed()"  > <h2>{{title}}</h2></v-btn>
 
                   <div class="text-center" id="circles" hidden="true">
                     <div>
@@ -94,15 +90,16 @@
                       :key="card.title"
                       :cols="card.flex"
                     >
+                    <v-card-title class="white--text align-center" v-text="card.title"></v-card-title>
                       <v-card>
                         <v-img
                           :src="card.src"
-                          class="white--text align-end"
                           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                           height="200px"
                         >
-                          <v-card-title v-text="card.title"></v-card-title>
+                         
                         </v-img>
+                       
                       </v-card>
                     </v-col>
                   </v-row>
@@ -128,6 +125,7 @@ const app = new Vue({
     vuetify: new Vuetify(),
     data () {
       return {
+        title: 'מי ראשון למקלחת?',
         vrow: false,
         cards: [
         { title: 'אבא', src: 'yovav.jpg', flex: 12 },
@@ -149,24 +147,32 @@ const app = new Vue({
         var faces_div = document.getElementById("faces");
         faces_div.hidden = true;
 
+        this.title ='מי ראשון למקלחת?';
 
         setTimeout(function(){
+
+          app.title = app.cards[0].title +"!";
 
           var div = document.getElementById("circles");
           div.hidden = true;
           var faces_div = document.getElementById("faces");
           faces_div.hidden = false;
+
+
         }, 5000);
 
         let array2 = [];
-        while (this.cards.length != 0)
-        {
-          let randomIndex = Math.floor(Math.random() * this.cards.length);
-          array2.push(this.cards[randomIndex]);
-          this.cards.splice(randomIndex, 1)
+          while (this.cards.length != 0)
+          {
+            let randomIndex = Math.floor(Math.random() * this.cards.length);
+            array2.push(this.cards[randomIndex]);
+            this.cards.splice(randomIndex, 1)
 
-        }
-        this.cards = array2;
+          }
+          this.cards = array2;
+          
+
+
 
 
       }
