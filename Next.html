@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html style='width:100%; height:100%;'>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+  <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style scoped>
+    .v-progress-circular {
+      margin: 1rem;
+    }
+    </style>
+<title>רשימת קניות</title>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+
+<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
+<link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script> 
+
+</head>
+
+<body style='width:100%; height:95%;' scrolling='no' dir="rtl">
+<div id="app">
+    <v-app right style='background-image: url("Lottery.jpg");'>
+      <v-main>
+
+        <v-container>
+          <v-layout row justify-center class="ma-5">
+            <v-flex xs12 sm8>
+                <div class="my-2" center style="width:100%">
+                  <v-btn block x-large tile rounded color="purple" dark @click="Changed()"  > <h2>מי ראשון למקלחת?</h2></v-btn>
+
+                  <div class="text-center" id="circles" hidden="true">
+                    <div>
+                    <v-progress-circular
+                      :size="70"
+                      :width="7"
+                      indeterminate
+                      color="primary"
+                    ></v-progress-circular>
+                    </div>
+                    <div>
+                    <v-progress-circular
+                    :size="70"
+                    :width="7"
+                      indeterminate
+                      color="red"
+                    ></v-progress-circular>
+                    </div>
+                
+                    <div>
+                    <v-progress-circular
+                    :size="70"
+                    :width="7"
+                      indeterminate
+                      color="purple"
+                    ></v-progress-circular>
+                    </div>
+                
+                    <div>
+                    <v-progress-circular
+                    :size="70"
+                    :width="7"
+                      indeterminate
+                      color="green"
+                    ></v-progress-circular>
+                    </div>
+                
+                    <div>
+                    <v-progress-circular
+                    :size="70"
+                    :width="7"
+                      indeterminate
+                      color="amber"
+                    ></v-progress-circular>
+                  </div>
+                  </div>
+
+
+                  <div class="text-center" id="faces" hidden="true">
+                  <v-row dense>
+                    <v-col
+                      v-for="card in cards"
+                      :key="card.title"
+                      :cols="card.flex"
+                    >
+                      <v-card>
+                        <v-img
+                          :src="card.src"
+                          class="white--text align-end"
+                          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                          height="200px"
+                        >
+                          <v-card-title v-text="card.title"></v-card-title>
+                        </v-img>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </div>
+
+                  </v-row>
+                </div>
+            </v-flex>
+          </v-layout>
+        </v-container >
+      </v-main>
+    </v-app>
+  </div>
+
+  <script>
+
+
+
+
+
+const app = new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+    data () {
+      return {
+        vrow: false,
+        cards: [
+        { title: 'אבא', src: 'yovav.jpg', flex: 12 },
+        { title: 'אמא', src: 'shlomit.jpg', flex: 12 },
+        { title: 'תגל', src: 'tagel.jpg', flex: 12 },
+        { title: 'ירדן', src: 'yarden.jpg', flex: 12 },
+        { title: 'מירון', src: 'meiron.jpg', flex: 12 },
+      ],
+      }
+    },
+    methods: {
+
+      Changed()
+      {
+
+        var div = document.getElementById("circles");
+        div.hidden = false;
+        
+        var faces_div = document.getElementById("faces");
+        faces_div.hidden = true;
+
+
+        setTimeout(function(){
+
+          var div = document.getElementById("circles");
+          div.hidden = true;
+          var faces_div = document.getElementById("faces");
+          faces_div.hidden = false;
+        }, 5000);
+
+        let array2 = [];
+        while (this.cards.length != 0)
+        {
+          let randomIndex = Math.floor(Math.random() * this.cards.length);
+          array2.push(this.cards[randomIndex]);
+          this.cards.splice(randomIndex, 1)
+
+        }
+        this.cards = array2;
+
+
+      }
+     
+    }
+  });
+
+  </script>
+
+
+</body>
+</html>
