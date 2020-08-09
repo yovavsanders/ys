@@ -43,15 +43,15 @@
 
           <v-stepper v-model="e1">
           <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1">Name of step 1</v-stepper-step>
+            <v-stepper-step :complete="e1 > 1" step="1"> רישום משתמש </v-stepper-step>
 
             <v-divider></v-divider>
 
-            <v-stepper-step :complete="e1 > 2" step="2">Name of step 2</v-stepper-step>
+            <v-stepper-step :complete="e1 > 2" step="2"> הזנת פרטי משתמש </v-stepper-step>
 
             <v-divider></v-divider>
 
-            <v-stepper-step step="3">Name of step 3</v-stepper-step>
+            <v-stepper-step step="3"> הזנת משתתפים</v-stepper-step>
           </v-stepper-header>
 
           <v-stepper-items>
@@ -61,6 +61,14 @@
               v-model="form"
               class="pa-4 pt-6"
             >
+
+            <v-text-field
+            v-model="family"
+            right
+            single-line
+            solo
+            placeholder="שם משפחה"
+          ></v-text-field>
 
             <v-text-field
               v-model="email"
@@ -119,8 +127,9 @@
 
       <v-stepper-content step="2">
           <v-radio-group v-model="parent" row>
-            <v-radio label="אני אמא" value="אמא"></v-radio>
-            <v-radio label="אני אבא" value="אבא"></v-radio>
+            מי נרשם?
+            <v-radio label="אמא" value="אמא"></v-radio>
+            <v-radio label="אבא" value="אבא"></v-radio>
           </v-radio-group>
           <v-file-input v-model="files"
             label="הוספת תמונה"
@@ -185,13 +194,14 @@
     <v-row justify="center">
       <v-dialog v-model="addPersonDialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
+          מי משתתף בהגרלה?
           <v-btn
             color="green"
             v-bind="attrs"
             v-on="on"
             dark
           >
-          הוספת אבא/אמא/ילד/ילדה
+          הוספת משתתפים (הורים או ילדים)
           <v-icon
           class="ml-1"
           small
@@ -298,13 +308,43 @@
 </v-alert>
 </v-dialog>
 
-            <v-btn text small
-            @click="login=true" > כניסה </v-btn>
+
+<v-dialog v-model="scss">
+  <v-alert
+  dense
+  type="success"
+>
+  הרישום בוצע  <strong>בהצלחה</strong> !
+</v-alert>
+</v-dialog>
+
+
+          <div id="enter">
+            <v-btn text small 
+            @click="login=true" > כניסה 
             <v-icon
             class="ml-1"
             small
           >mdi-arrow-left
-          </v-icon>
+          </v-icon></v-btn>
+          </div>
+
+
+          <div id="exit" hidden="true">
+            <v-btn text small 
+            @click="signOut" > יציאה 
+            <v-icon
+            class="ml-1"
+            small
+          >mdi-arrow-right
+          </v-icon></v-btn>
+
+          </div>
+
+
+
+          <div style="margin-top: 17px; font-size: small;"><p class="center text small" >{{welcome}}</p></div>
+          
 
           </v-app-bar>
 
@@ -421,6 +461,34 @@
                 </div>
             </v-flex>
           </v-layout>
+
+
+
+
+          <v-row
+          class="fill-height"
+          align-content="center"
+          justify="center"
+          hidden
+        >
+          <v-col
+            class="subtitle-1 text-center white--text"
+            cols="12"
+          >
+            {{loading_text}}
+          </v-col>
+          <v-col cols="6">
+            <v-progress-linear
+              color="deep-purple accent-4"
+              :active="loading"
+              :indeterminate="loading"
+              rounded
+              height="6"
+            ></v-progress-linear>
+          </v-col>
+        </v-row>
+
+
         </v-container >
       </v-main>
     </v-app>
