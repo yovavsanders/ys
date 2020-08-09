@@ -208,6 +208,7 @@ const app = new Vue({
 
         console.log("loadImage");          //checks if files are selected
         this.loading = true;
+        this.dialog = false;
         this.loading_text = "טוען קובץ תמונה..."
         this.isImageDone = false;
         if (this.files) {
@@ -255,6 +256,7 @@ const app = new Vue({
                           app.loading_text = "";
 
                           app.isImageDone = true;
+                          app.dialog = true;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
@@ -275,6 +277,7 @@ const app = new Vue({
         console.log("loadImage"); 
         console.log("loadImage");          //checks if files are selected
         this.loading = true;
+        this.dialog = false;
         this.loading_text = "טוען קובץ תמונה..."
         this.isImageDone = false;
         //checks if files are selected
@@ -323,6 +326,10 @@ const app = new Vue({
                       app.loading_text = "";
 
                       app.isImageDone = true;
+
+                      app.dialog = true;
+                      app.gender = null;
+                      app.personName = null;
 
                 }
             );
