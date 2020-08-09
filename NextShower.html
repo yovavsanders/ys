@@ -31,6 +31,318 @@
       <v-main>
 
         <v-container>
+
+          <v-app-bar color="rgba(255, 255, 255, 0.8)" class="my-2">
+
+          <v-dialog
+          v-model="dialog"
+          max-width="600"
+        >
+
+          <!--  stepper -->
+
+          <v-stepper v-model="e1">
+          <v-stepper-header>
+            <v-stepper-step :complete="e1 > 1" step="1">Name of step 1</v-stepper-step>
+
+            <v-divider></v-divider>
+
+            <v-stepper-step :complete="e1 > 2" step="2">Name of step 2</v-stepper-step>
+
+            <v-divider></v-divider>
+
+            <v-stepper-step step="3">Name of step 3</v-stepper-step>
+          </v-stepper-header>
+
+          <v-stepper-items>
+          <v-stepper-content step="1">
+              <v-form
+              ref="form"
+              v-model="form"
+              class="pa-4 pt-6"
+            >
+
+            <v-text-field
+              v-model="email"
+              right
+              :rules="[rules.email]"
+              single-line
+              solo
+              placeholder="מייל"
+              type="email"
+            ></v-text-field>
+
+            <v-text-field
+            v-model="password"
+            right
+            :rules="[rules.password]"
+            single-line
+            solo
+            placeholder="סיסמא"
+            style="min-height: 96px"
+            type="password"
+          ></v-text-field>
+        </v-form>
+        <v-btn
+        :disabled="!form"
+        :loading="isLoading"
+        class="white--text"
+        color="green"
+        depressed
+          color="primary"
+          text
+          @click="signUp"
+        >
+          שמור
+        </v-btn>
+        <v-btn id="clearForm"
+        color="red"
+        text
+        @click="reset"
+      >
+        בטל
+      </v-btn>
+        <v-btn
+          color="primary"
+          @click="e1 = 2"
+          :disabled='isDisabled'
+        >
+          הבא
+          <v-icon
+          class="ml-1"
+          small
+        >mdi-arrow-left</v-icon>
+        </v-btn>
+
+        
+      </v-stepper-content>
+
+      <v-stepper-content step="2">
+          <v-radio-group v-model="parent" row>
+            <v-radio label="אני אמא" value="אמא"></v-radio>
+            <v-radio label="אני אבא" value="אבא"></v-radio>
+          </v-radio-group>
+          <v-file-input v-model="files"
+            label="הוספת תמונה"
+            filled
+            prepend-icon="mdi-camera"
+          ></v-file-input>
+       
+            </v-card-text>
+          </v-form>  
+              <v-btn
+              :disabled="!form"
+              :loading="isLoading"
+              class="white--text"
+              color="green"
+              color="green"
+              depressed
+                color="primary"
+                text
+                @click="loadImage"
+              >
+                שמור
+              </v-btn>
+              <v-btn id="clearForm2"
+              text
+              color="red"
+              @click="$refs.form.reset()"
+            >
+              בטל
+            </v-btn>
+
+        <v-btn text color="primary">
+        הקודם
+                  
+        <v-icon
+        class="ml-1"
+        small
+      >mdi-arrow-right</v-icon>
+      </v-btn>
+        <v-btn
+          color="primary"
+          @click="e1 = 3"
+          :disabled='isDisabled2'
+        >
+          הבא
+          <v-icon
+          class="ml-1"
+          small
+        >mdi-arrow-left</v-icon>
+        </v-btn>
+
+       
+      </v-stepper-content>
+
+      <v-stepper-content step="3">
+        <v-form
+        ref="form"
+        v-model="form"
+        class="pa-4 pt-6"
+      >
+
+
+    <v-row justify="center">
+      <v-dialog v-model="addPersonDialog" persistent max-width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="green"
+            v-bind="attrs"
+            v-on="on"
+            dark
+          >
+          הוספת אבא/אמא/ילד/ילדה
+          <v-icon
+          class="ml-1"
+          small
+        >mdi-plus</v-icon>
+        </v-btn>
+
+        <v-row dense>
+
+  
+          <v-col
+            v-for="(item, i) in familycards"
+            :key="i"
+            cols="12"
+          >
+            <v-card>
+              <div class="d-flex flex-no-wrap justify-space-between">
+                <div>
+                  <v-card-title
+                    class="headline"
+                    v-text="item.name"
+                  ></v-card-title>
+                </div>
+  
+                <v-avatar
+                  class="ma-3"
+                  size="125"
+                  tile
+                >
+                  <v-img :src="item.image"></v-img>
+                </v-avatar>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+
+
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">פרטים</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field v-model="personName" label="שם" required></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-select
+                    v-model=gender
+                    :items="['בן', 'בת']"
+                    label="בן או בת"
+                    required
+                  ></v-select>
+                </v-col>
+                 <v-col cols="12" sm="6">
+                  <v-file-input v-model="personFiles"
+                  label="הוספת תמונה"
+                  filled
+                  prepend-icon="mdi-camera"
+                ></v-file-input>
+                 </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="addPersonDialog = false">סגירה</v-btn>
+            <v-btn color="blue darken-1" text @click="loadPersonImage">שמירה</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+
+
+      </v-form>
+
+
+        <v-btn text>הקודם</v-btn>
+        <v-btn
+          color="primary"
+          @click="doneRegisting"
+        >
+          סיום
+        </v-btn>
+      </v-stepper-content>
+    </v-stepper-items>
+  </v-stepper>
+
+
+  <template v-slot:activator="{ on, attrs }">
+  <v-btn text small strong v-bind="attrs"
+  v-on="on">הרשמה</v-btn>
+</template>
+ </v-dialog>
+
+
+ <v-dialog v-model="err">
+  <v-alert
+  dense
+  type="error"
+>
+  ניתן להכנס כמשתמש  <strong>רשום</strong> בלבד
+</v-alert>
+</v-dialog>
+
+            <v-btn text small
+            @click="login=true" > כניסה </v-btn>
+            <v-icon
+            class="ml-1"
+            small
+          >mdi-arrow-left
+          </v-icon>
+
+          </v-app-bar>
+
+
+        <v-dialog
+        v-model="login"
+        max-width="600">
+          <v-form
+          ref="form"
+          v-model="form"
+          class="pa-4 pt-6"
+        >
+
+        <v-text-field
+          v-model="email"
+          right
+          single-line
+          solo
+          placeholder="מייל"
+          type="email"
+        ></v-text-field>
+
+        <v-text-field
+        v-model="password"
+        right
+        single-line
+        solo
+        placeholder="סיסמא"
+        style="min-height: 96px"
+        type="password"
+      ></v-text-field>
+    </v-form>
+    <v-btn color="purple" dark @click="loginPerson">כניסה</v-btn>
+  </v-dialog>
+
+
+
+
           <v-layout row justify-center class="ma-5">
             <v-flex xs12 sm8>
                 <div class="my-2" center style="width:100%">
@@ -86,14 +398,14 @@
                   <div class="text-center" id="faces" hidden="true">
                   <v-row dense>
                     <v-col
-                      v-for="card in cards"
-                      :key="card.title"
+                      v-for="card in familycards"
+                      :key="card.name"
                       :cols="card.flex"
                     >
-                    <v-card-title class="white--text align-center" v-text="card.title + ' ' + (order_dictionary[cards.indexOf(card) + '_' +card.gen])"></v-card-title>
+                    <v-card-title class="white--text align-center" v-text="card.name + ' ' + (order_dictionary[familycards.indexOf(card) + '_' +card.gen])"></v-card-title>
                       <v-card>
                         <v-img
-                          :src="card.src"
+                          :src="card.image"
                           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                           height="200px"
                         >
@@ -114,87 +426,38 @@
     </v-app>
   </div>
 
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-functions.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-storage.js"></script>
   <script>
 
 
 
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+    apiKey: "AIzaSyDTSUZ0saACPIdRk6qImBVynOoyjUUUwto",
+    authDomain: "nextshower.firebaseapp.com",
+    databaseURL: "https://nextshower.firebaseio.com",
+    projectId: "nextshower",
+    storageBucket: "nextshower.appspot.com",
+    messagingSenderId: "214332823020",
+    appId: "1:214332823020:web:d5ff03e441b0261bc25cc9",
+    measurementId: "G-XHFXXM6X1R"
+  };
 
-
-const app = new Vue({
-    el: '#app',
-    vuetify: new Vuetify(),
-    data () {
-      return {
-        title: 'מי ראשון למקלחת?',
-        vrow: false,
-        cards: [
-          { title: 'אבא', src: 'yovav.jpg', flex: 12, gen: 'm' },
-          { title: 'אמא', src: 'shlomit.jpg', flex: 12, gen: 'f' },
-          { title: 'תגל', src: 'tagel.jpg', flex: 12, gen: 'f' },
-          { title: 'ירדן', src: 'yarden.jpg', flex: 12, gen: 'f' },
-          { title: 'מירון', src: 'meiron.jpg', flex: 12, gen: 'm'},
-          ],
-
-        order_dictionary : {
-
-          '0_m': 'ראשון',
-          '1_m': 'שני',
-          '2_m': 'שלישי',
-          '3_m': 'רביעי',
-          '4_m': 'חמישי',
-          '0_f': 'ראשונה',
-          '1_f': 'שניה',
-          '2_f': 'שלישית',
-          '3_f': 'רביעית',
-          '4_f': 'חמישית'
-          }
-        }
-    },
-    methods: {
-
-      Changed()
-      {
-
-        var div = document.getElementById("circles");
-        div.hidden = false;
-        
-        var faces_div = document.getElementById("faces");
-        faces_div.hidden = true;
-
-        this.title ='מי ראשון למקלחת?';
-
-        setTimeout(function(){
-
-          app.title = app.cards[0].title +"!";
-
-          var div = document.getElementById("circles");
-          div.hidden = true;
-          var faces_div = document.getElementById("faces");
-          faces_div.hidden = false;
-
-
-        }, 5000);
-
-        let array2 = [];
-          while (this.cards.length != 0)
-          {
-            let randomIndex = Math.floor(Math.random() * this.cards.length);
-            array2.push(this.cards[randomIndex]);
-            this.cards.splice(randomIndex, 1)
-
-          }
-          this.cards = array2;
-          
-
-
-
-
-      }
-     
-    }
-  });
-
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  
+  
   </script>
+  <script src="NextShower.js"></script>
 
 
 </body>
