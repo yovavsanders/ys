@@ -315,21 +315,22 @@ const app = new Vue({
                         console.log(url);
                         app.personImage =  url;
                           app.familycards.push({"name": app.personName, "image": app.personImage, "gen":  app.gen_index[app.gender], flex: 12});
+                          app.addPersonDialog = false;
+                          app.personFiles = null;
+    
+                          app.loading = false;
+                          app.loading_text = "";
+    
+                          app.isImageDone = true;
+    
+                          app.dialog = true;
+                          app.gender = null;
+                          app.personName = null;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
                       });
-                      app.addPersonDialog = false;
-                      app.personFiles = null;
 
-                      app.loading = false;
-                      app.loading_text = "";
-
-                      app.isImageDone = true;
-
-                      app.dialog = true;
-                      app.gender = null;
-                      app.personName = null;
 
                 }
             );
