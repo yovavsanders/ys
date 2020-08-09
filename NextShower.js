@@ -22,13 +22,15 @@ const app = new Vue({
             gender: null,
             agreement: false,
             dialog: false,
+            family: null,
             email: undefined,
             form: false,
             isLoading: false,
             password: undefined,
             err: false,
+            scss:false,
             rules: {
-                email: v => !!(v || '').match(/@/) || 'נא להקליד כץובת מייל תקנית',
+                email: v => !!(v || '').match(/@/) || 'נא להקליד כתובת מייל תקנית',
                 password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z]).+$/) ||
                 'אותיות קטנות וגדולות',
                 required: v => !!v || 'שדה זה הינו חובה',
@@ -65,7 +67,10 @@ const app = new Vue({
             gen_parents:{
                 'אבא': 'm',
                 'אמא': 'f',
-            }
+            },
+            loading: false,
+            loading_text: "",
+            welcome: ""
         }
     },
     methods: {
@@ -96,6 +101,13 @@ const app = new Vue({
                         console.log(doc.data().familycards);
                         app.familycards = doc.data().familycards;
                         app.login= false;
+                        app.welcome = "שלום, משפחת " + doc.data().family + "!";
+
+                        var enter = document.getElementById("enter");
+                        enter.hidden = true;
+
+                        var exit  = document.getElementById("exit");
+                        exit.hidden = false;
                     });
                 });
             });
@@ -121,6 +133,7 @@ const app = new Vue({
                         title:  null, //this.parent,
                         userid: cred.user.uid,
                         familycards: [],
+                        family: app.family
                     }
                 ).then(function(docRef) {
                     app.docid = docRef.id;
@@ -150,7 +163,7 @@ const app = new Vue({
       {
 
 
-        if (app.familycards[0].name != "")
+        if (app.familycards.length > 0)
         {
             var div = document.getElementById("circles");
             div.hidden = false;
@@ -184,7 +197,7 @@ const app = new Vue({
         }
         else
         {
-            this.err = true;
+            app.err = true;
         }
 
       },
@@ -192,6 +205,8 @@ const app = new Vue({
       loadImage()
       {
         console.log("loadImage");          //checks if files are selected
+        this.loading = true;
+        this.loading_text = "טוען קובץ תמונה..."
         if (this.files) {
 
             //create a storage reference
@@ -243,6 +258,8 @@ const app = new Vue({
         } else {
             alert("No file chosen");
         }
+        this.loading = false;
+        this.loading_text = "";
 
       },
 
@@ -308,9 +325,34 @@ const app = new Vue({
             title: app.parent,
             familycards: app.familycards
           });
+          this.dialog=false;
+          this.scss = true;
+          app.welcome = "שלום משפחת " + app.family
 
-          alert("רישום בוצע בהצלחה");
+          var enter = document.getElementById("enter");
+          enter.hidden = true;
 
+          var exit  = document.getElementById("exit");
+          exit.hidden = false;
+
+
+      },
+      signOut()
+      {
+        firebase.auth().signOut().then(function() {
+            console.log("Sign-out successful.");
+            app.welcome = "";
+
+            var enter = document.getElementById("enter");
+            enter.hidden = false;
+  
+            var exit  = document.getElementById("exit");
+            exit.hidden = true;
+
+            app.familycards = [];
+          }).catch(function(error) {
+            console.log("Sign-out Error.");
+          });
       }
      
     },
