@@ -271,6 +271,7 @@ const app = new Vue({
                 },
 
                 function complete() {
+                    
                     console.log("img uploaded!")
                     console.log("getFileUrl");
                     //create a storage reference
@@ -286,6 +287,8 @@ const app = new Vue({
                       .catch(function(error) {
                         console.log("error encountered");
                       });
+                      app.addPersonDialog = false;
+                      app.personFiles = null;
 
                 }
             );
