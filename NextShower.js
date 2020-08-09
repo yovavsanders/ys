@@ -5,6 +5,7 @@ const app = new Vue({
     vuetify: new Vuetify(),
     data () {
         return {
+            isImageDone: true, 
             login: false,
             personName: null,
             itemsPerPage: 4,
@@ -204,9 +205,11 @@ const app = new Vue({
 
       loadImage()
       {
+
         console.log("loadImage");          //checks if files are selected
         this.loading = true;
         this.loading_text = "טוען קובץ תמונה..."
+        this.isImageDone = false;
         if (this.files) {
 
             //create a storage reference
@@ -247,6 +250,11 @@ const app = new Vue({
                           });
                           app.familycards.push({"name": app.parent, "image": app.imgpath, "gen": app.gen_parents[app.parent], flex: 12});
                           app.stp2 = true;
+
+                          app.loading = false;
+                          app.loading_text = "";
+
+                          app.isImageDone = true;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
@@ -258,14 +266,18 @@ const app = new Vue({
         } else {
             alert("No file chosen");
         }
-        this.loading = false;
-        this.loading_text = "";
+
 
       },
 
       loadPersonImage()
       {
+        console.log("loadImage"); 
         console.log("loadImage");          //checks if files are selected
+        this.loading = true;
+        this.loading_text = "טוען קובץ תמונה..."
+        this.isImageDone = false;
+        //checks if files are selected
         if (this.personFiles) {
 
             //create a storage reference
@@ -307,6 +319,11 @@ const app = new Vue({
                       app.addPersonDialog = false;
                       app.personFiles = null;
 
+                      app.loading = false;
+                      app.loading_text = "";
+
+                      app.isImageDone = true;
+
                 }
             );
 
@@ -342,12 +359,19 @@ const app = new Vue({
         firebase.auth().signOut().then(function() {
             console.log("Sign-out successful.");
             app.welcome = "";
+            app.title = "מי ראשון למקלחת?";
 
             var enter = document.getElementById("enter");
             enter.hidden = false;
   
             var exit  = document.getElementById("exit");
             exit.hidden = true;
+
+            var div = document.getElementById("circles");
+            div.hidden = true;
+            
+            var faces_div = document.getElementById("faces");
+            faces_div.hidden = true;
 
             app.familycards = [];
           }).catch(function(error) {
