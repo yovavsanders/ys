@@ -150,7 +150,7 @@ const app = new Vue({
       {
 
 
-        if (app.familycards.lengths > 0)
+        if (app.familycards[0].name != "")
         {
             var div = document.getElementById("circles");
             div.hidden = false;
