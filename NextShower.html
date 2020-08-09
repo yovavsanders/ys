@@ -140,7 +140,7 @@
             </v-card-text>
           </v-form>  
               <v-btn
-              :disabled="!form"
+              :disabled="!isImageDone"
               :loading="isLoading"
               class="white--text"
               color="green"
@@ -196,6 +196,7 @@
         <template v-slot:activator="{ on, attrs }">
           מי משתתף בהגרלה?
           <v-btn
+          :disabled="!isImageDone"
             color="green"
             v-bind="attrs"
             v-on="on"
@@ -282,6 +283,7 @@
 
         <v-btn text>הקודם</v-btn>
         <v-btn
+          :disabled="!isImageDone"
           color="primary"
           @click="doneRegisting"
         >
@@ -466,24 +468,24 @@
 
 
           <v-row
-          class="fill-height"
           align-content="center"
           justify="center"
           hidden
         >
-          <v-col
-            class="subtitle-1 text-center white--text"
+          <v-col cols="12"
+            class="h-3 text-center white--text"
             cols="12"
           >
             {{loading_text}}
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12">
             <v-progress-linear
-              color="deep-purple accent-4"
               :active="loading"
               :indeterminate="loading"
-              rounded
-              height="6"
+              height="20"
+              value="45"
+              striped
+              color="lime"
             ></v-progress-linear>
           </v-col>
         </v-row>
