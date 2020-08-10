@@ -382,6 +382,9 @@ const app = new Vue({
             faces_div.hidden = true;
 
             app.familycards = [];
+            
+            app.title ='מי ראשון למקלחת?';
+           
           }).catch(function(error) {
             console.log("Sign-out Error.");
           });
