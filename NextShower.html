@@ -8,6 +8,7 @@
     .v-progress-circular {
       margin: 1rem;
     }
+
     [v-cloak] {
         display: none;
     }
@@ -135,15 +136,15 @@
             <v-radio label="אבא" value="אבא"></v-radio>
           </v-radio-group>
           <v-file-input v-model="files"
-            placeholder="הוספת תמונה"
-            accept="image/png, image/jpeg, image/bmp"
+            label="הוספת תמונה"
+            filled
             prepend-icon="mdi-camera"
           ></v-file-input>
        
             </v-card-text>
           </v-form>  
               <v-btn
-              :disabled="!isImageDone"
+              :disabled="!form"
               :loading="isLoading"
               class="white--text"
               color="green"
@@ -163,8 +164,7 @@
               בטל
             </v-btn>
 
-        <v-btn color="primary"
-        @click="e1 = 1">
+        <v-btn text color="primary">
         הקודם
                   
         <v-icon
@@ -200,7 +200,6 @@
         <template v-slot:activator="{ on, attrs }">
           מי משתתף בהגרלה?
           <v-btn
-          :disabled="!isImageDone"
             color="green"
             v-bind="attrs"
             v-on="on"
@@ -252,20 +251,20 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field v-model="personName" placeholder="שם" required></v-text-field>
+                  <v-text-field v-model="personName" label="שם" required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
                   <v-select
                     v-model=gender
                     :items="['בן', 'בת']"
-                    placeholder="בן או בת"
+                    label="בן או בת"
                     required
                   ></v-select>
                 </v-col>
                  <v-col cols="12" sm="6">
                   <v-file-input v-model="personFiles"
-                  placeholder="הוספת תמונה"
-                  accept="image/png, image/jpeg, image/bmp"
+                  label="הוספת תמונה"
+                  filled
                   prepend-icon="mdi-camera"
                 ></v-file-input>
                  </v-col>
@@ -285,10 +284,8 @@
       </v-form>
 
 
-        <v-btn color="primary" @click="e1 = 2"
-        >הקודם</v-btn>
+        <v-btn text>הקודם</v-btn>
         <v-btn
-          :disabled="!isImageDone"
           color="primary"
           @click="doneRegisting"
         >
@@ -328,7 +325,7 @@
 
           <div id="enter">
             <v-btn text small 
-            @click="login=true" > כניסה 
+            @click="login_true()" > כניסה 
             <v-icon
             class="ml-1"
             small
@@ -473,24 +470,24 @@
 
 
           <v-row
+          class="fill-height"
           align-content="center"
           justify="center"
           hidden
         >
-          <v-col cols="12"
-            class="h-3 text-center white--text"
+          <v-col
+            class="subtitle-1 text-center white--text"
             cols="12"
           >
             {{loading_text}}
           </v-col>
-          <v-col cols="12">
+          <v-col cols="6">
             <v-progress-linear
+              color="deep-purple accent-4"
               :active="loading"
               :indeterminate="loading"
-              height="20"
-              value="45"
-              striped
-              color="lime"
+              rounded
+              height="6"
             ></v-progress-linear>
           </v-col>
         </v-row>
@@ -513,26 +510,38 @@
 
 
 
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-    apiKey: "AIzaSyDTSUZ0saACPIdRk6qImBVynOoyjUUUwto",
-    authDomain: "nextshower.firebaseapp.com",
-    databaseURL: "https://nextshower.firebaseio.com",
-    projectId: "nextshower",
-    storageBucket: "nextshower.appspot.com",
-    messagingSenderId: "214332823020",
-    appId: "1:214332823020:web:d5ff03e441b0261bc25cc9",
-    measurementId: "G-XHFXXM6X1R"
-  };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+
+
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+      apiKey: "AIzaSyDTSUZ0saACPIdRk6qImBVynOoyjUUUwto",
+      authDomain: "nextshower.firebaseapp.com",
+      databaseURL: "https://nextshower.firebaseio.com",
+      projectId: "nextshower",
+      storageBucket: "nextshower.appspot.com",
+      messagingSenderId: "214332823020",
+      appId: "1:214332823020:web:d5ff03e441b0261bc25cc9",
+      measurementId: "G-XHFXXM6X1R"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+
+    $(document).ready(function ()
+    {
+      app.login_true();
+    });
+
   
   
   </script>
   <script src="NextShower.js"></script>
+
+
 
 
 </body>
