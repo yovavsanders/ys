@@ -12,6 +12,14 @@
     [v-cloak] {
         display: none;
     }
+
+
+    .block {
+    position: absolute;
+    left: 10px;
+}
+    
+    
     </style>
 <title>מי ראשון למקלחת</title>
 
@@ -36,7 +44,7 @@
 
         <v-container>
 
-          <v-app-bar color="rgba(255, 255, 255, 0.8)" class="my-2">
+          <v-app-bar color="rgba(255, 255, 255, 0.8)" justify="space-around">
 
           <v-dialog
           v-model="dialog"
@@ -240,9 +248,9 @@
             </v-card>
           </v-col>
         </v-row>
-
-
         </template>
+
+
         <v-card>
           <v-card-title>
             <span class="headline">פרטים</span>
@@ -279,8 +287,6 @@
         </v-card>
       </v-dialog>
     </v-row>
-
-
       </v-form>
 
 
@@ -298,7 +304,7 @@
 
   <template v-slot:activator="{ on, attrs }">
   <v-btn text small strong v-bind="attrs"
-  v-on="on">הרשמה</v-btn>
+  v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 </template>
  </v-dialog>
 
@@ -325,7 +331,7 @@
 
           <div id="enter">
             <v-btn text small 
-            @click="login_true()" > כניסה 
+            @click="login_true" > כניסה 
             <v-icon
             class="ml-1"
             small
@@ -348,9 +354,40 @@
 
 
           <div style="margin-top: 17px; font-size: small;"><p class="center text small" >{{welcome}}</p></div>
+
+
+          <div id="settings" class="block">
+            <v-icon
+            left
+            class="ml-1"
+            small @click="settings=true" 
+          >mdi-settings
+          </v-icon>
+          </div>
+          
           
 
           </v-app-bar>
+
+
+          
+        <v-dialog
+        v-model="settings"
+        max-width="600">
+        <v-card>
+            <v-card-title>
+                הגדרות
+            </v-card-title>
+            <v-card-text>
+                <v-btn class="ma-2" tile outlined color="success">
+                     שינוי פרטי משתמש <v-icon left>mdi-pencil</v-icon>
+                  </v-btn>
+            </v-card-text>
+        </v-card>
+
+
+        </v-dialog>
+
 
 
         <v-dialog
