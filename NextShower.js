@@ -110,6 +110,11 @@ const app = new Vue({
                     app.login = true;
                 }
             });
+            
+            var div = document.getElementById("circles");
+            div.hidden = true;
+            var faces_div = document.getElementById("faces");
+            faces_div.hidden = true;
         },
         reset(){
             this.password = null;
