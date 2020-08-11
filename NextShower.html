@@ -31,7 +31,7 @@
 
 <body style='width:100%; height:95%;' scrolling='no' dir="rtl">
 <div id="app">
-    <v-app v-cloak right style='background-image: url("Lottery.jpg");'>
+    <v-app v-cloak right style='background-image: url("Lottery.jpg"); opacity: 90%;'>
       <v-main>
 
         <v-container>
@@ -386,7 +386,6 @@
 
 
 
-
           <v-layout row justify-center class="ma-5">
             <v-flex xs12 sm8>
                 <div class="my-2" center style="width:100%">
@@ -398,7 +397,7 @@
                       :size="70"
                       :width="7"
                       indeterminate
-                      color="primary"
+                      color="purple"
                     ></v-progress-circular>
                     </div>
                     <div>
@@ -406,7 +405,7 @@
                     :size="70"
                     :width="7"
                       indeterminate
-                      color="red"
+                      color="purple"
                     ></v-progress-circular>
                     </div>
                 
@@ -424,7 +423,7 @@
                     :size="70"
                     :width="7"
                       indeterminate
-                      color="green"
+                      color="purple"
                     ></v-progress-circular>
                     </div>
                 
@@ -433,7 +432,7 @@
                     :size="70"
                     :width="7"
                       indeterminate
-                      color="amber"
+                      color="purple"
                     ></v-progress-circular>
                   </div>
                   </div>
@@ -454,7 +453,7 @@
                         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"  
                         >
                       </v-avatar>
-                    <v-card-title style="text-align: center" class="justify-center white--text align-center" v-text="card.name + ' ' + (order_dictionary[familycards.indexOf(card) + '_' +card.gen])"></v-card-title>
+                    <v-card-title class="justify-center align-center headline mb-2 font-weight-bold" v-text="card.name + ' ' + (order_dictionary[familycards.indexOf(card) + '_' +card.gen])"></v-card-title>
                     </v-col>
                   </v-row>
                 </div>
