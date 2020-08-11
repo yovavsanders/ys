@@ -440,23 +440,21 @@
 
 
                   <div class="text-center" id="faces" hidden="true">
+
                   <v-row dense>
                     <v-col
                       v-for="card in familycards"
                       :key="card.name"
                       :cols="card.flex"
                     >
-                    <v-card-title class="white--text align-center" v-text="card.name + ' ' + (order_dictionary[familycards.indexOf(card) + '_' +card.gen])"></v-card-title>
-                      <v-card>
-                        <v-img
-                          :src="card.image"
-                          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                          height="200px"
+                    <v-avatar size="160">
+                        <img
+                        :src="card.image"
+                        height="200px"
+                        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"  
                         >
-                         
-                        </v-img>
-                       
-                      </v-card>
+                      </v-avatar>
+                    <v-card-title style="text-align: center" class="justify-center white--text align-center" v-text="card.name + ' ' + (order_dictionary[familycards.indexOf(card) + '_' +card.gen])"></v-card-title>
                     </v-col>
                   </v-row>
                 </div>
