@@ -40,6 +40,7 @@ const app = new Vue({
             },
 
             dialog: false,
+            settings: false,
             title: 'מי ראשון למקלחת?',
             vrow: false,
             familycards: [],
@@ -73,10 +74,22 @@ const app = new Vue({
             },
             loading: false,
             loading_text: "",
-            welcome: ""
+            welcome: "",
+            signbtn: true
         }
     },
     methods: {
+
+
+        turn_off_signbtn() {
+            this.signbtn = false;
+        },
+
+        
+        turn_on_signbtn() {
+            this.signbtn = true;
+        },
+
 
         login_true()
         {
@@ -100,9 +113,13 @@ const app = new Vue({
   
                           var enter = document.getElementById("enter");
                           enter.hidden = true;
+
   
                           var exit  = document.getElementById("exit");
                           exit.hidden = false;
+
+
+                          app.turn_off_signbtn();
                       });
                   });
 
@@ -110,6 +127,7 @@ const app = new Vue({
                     app.login = true;
                 }
             });
+
             
             var div = document.getElementById("circles");
             div.hidden = true;
@@ -397,6 +415,8 @@ const app = new Vue({
 
             app.title ='מי ראשון למקלחת?';
 
+            app.turn_on_signbtn();
+
           }).catch(function(error) {
             console.log("Sign-out Error.");
           });
@@ -412,6 +432,9 @@ const app = new Vue({
          },
         isDisabled2: function(){
         return !this.stp2;
-        }
+        },
+        isDisabled3: function(){
+            return !this.stp2;
+            }
     }
   });
