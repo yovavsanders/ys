@@ -104,6 +104,7 @@
           ></v-text-field>
         </v-form>
         <v-btn
+        id="reg_btn"
         :disabled="!form"
         :loading="isLoading"
         class="white--text"
@@ -113,7 +114,7 @@
           text
           @click="signUp"
         >
-          שמור
+          בצע הרשמה
         </v-btn>
         <v-btn id="clearForm"
         color="red"
@@ -124,7 +125,7 @@
       </v-btn>
         <v-btn
           color="primary"
-          @click="e1 = 2"
+          @click="e1 = 1"
           :disabled='isDisabled'
         >
           הבא
@@ -162,7 +163,7 @@
                 text
                 @click="loadImage"
               >
-                שמור
+                טען תמונה
               </v-btn>
               <v-btn id="clearForm2"
               text
