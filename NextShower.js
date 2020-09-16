@@ -1,7 +1,7 @@
 
 
 
-
+var dref ;
 
 const app = new Vue({
     el: '#app',
@@ -95,14 +95,14 @@ const app = new Vue({
         {
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-                  // User is signed in.
+                    console.log("User is signed in.")
                   console.log(user.uid);
 
 
-                  // Create a reference to the cities collection
-                  var dref = db.collection("cards");
-  
-                  // Create a query against the collection.
+                  console.log("// Create a reference to the cities collection");
+                  dref = db.collection("cards");
+                  console.log(dref);
+                  console.log("// Create a query against the collection.");
                   var query = dref.where("userid", "==", user.uid);
                   query.get().then(function (querySnapshot) {
                       querySnapshot.forEach(function (doc) {
@@ -153,10 +153,10 @@ const app = new Vue({
                 console.log(cred.user.uid);
 
 
-                // Create a reference to the cities collection
+                console.log("Create a reference to the cities collection");
                 var dref = db.collection("cards");
 
-                // Create a query against the collection.
+                console.log("Create a query against the collection.");
                 var query = dref.where("userid", "==", cred.user.uid);
                 query.get().then(function (querySnapshot) {
                     querySnapshot.forEach(function (doc) {
@@ -267,6 +267,7 @@ const app = new Vue({
       loadImage()
       {
         console.log("loadImage");          //checks if files are selected
+        this.dialog  =false;
         this.loading = true;
         this.loading_text = "טוען קובץ תמונה..."
         if (this.files) {
@@ -322,6 +323,7 @@ const app = new Vue({
         }
         this.loading = false;
         this.loading_text = "";
+        this.dialog  =true;
 
       },
 
