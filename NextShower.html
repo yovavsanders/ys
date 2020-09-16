@@ -329,6 +329,16 @@
 </v-dialog>
 
 
+<v-dialog v-model="reg_failed">
+  <v-alert
+  dense
+  type="error"
+>
+סיסמא או מייל לא תקינים
+</v-alert>
+</v-dialog>
+
+
           <div id="enter">
             <v-btn text small 
             @click="login_true" > כניסה 
@@ -510,7 +520,7 @@
           hidden
         >
           <v-col
-            class="subtitle-1 text-center white--text"
+            class="subtitle-3 text-center"
             cols="12"
           >
             {{loading_text}}
@@ -521,7 +531,7 @@
               :active="loading"
               :indeterminate="loading"
               rounded
-              height="6"
+              height="8"
             ></v-progress-linear>
           </v-col>
         </v-row>
@@ -532,14 +542,12 @@
     </v-app>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-functions.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
 
-
-
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-functions.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-storage.js"></script>
   <script>
 
 
@@ -559,7 +567,16 @@
       measurementId: "G-XHFXXM6X1R"
     };
 
+
+
+
+
     // Initialize Firebase
+
+
+
+
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
@@ -574,9 +591,6 @@
   
   </script>
   <script src="NextShower.js"></script>
-
-
-
-
+  
 </body>
 </html>
