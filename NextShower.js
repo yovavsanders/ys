@@ -310,9 +310,13 @@ const app = new Vue({
                           });
                           app.familycards.push({"name": app.parent, "image": app.imgpath, "gen": app.gen_parents[app.parent], flex: 12});
                           app.stp2 = true;
+                          this.loading = false;
+                          this.loading_text = "";
+                          this.dialog  =true;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
+                        this.loading_text = "error encountered";
                       });
 
                 }
@@ -321,9 +325,7 @@ const app = new Vue({
         } else {
             alert("No file chosen");
         }
-        this.loading = false;
-        this.loading_text = "";
-        this.dialog  =true;
+
 
       },
 
