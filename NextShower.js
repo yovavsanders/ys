@@ -35,8 +35,8 @@ const app = new Vue({
             scss:false,
             rules: {
                 email: v => !!(v || '').match(/@/) || 'נא להקליד כתובת מייל תקנית',
-                password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z]).+$/) ||
-                'אותיות קטנות וגדולות',
+                password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z]).{7,}/) ||
+                'מינימום 7 אותיות קטנות וגדולות',
                 required: v => !!v || 'שדה זה הינו חובה',
             },
 
@@ -171,6 +171,8 @@ const app = new Vue({
 
                         var exit  = document.getElementById("exit");
                         exit.hidden = false;
+
+                        app.e1 = 3;
                     });
                 });
             }).then(() => {
@@ -210,6 +212,8 @@ const app = new Vue({
                 });
             }).then(() => {
                 console.log("ok");
+                document.getElementById("reg_btn").hidden = true;
+                app.e1 = 2;
 
             }).catch(err => {
                 console.log("error");
@@ -321,6 +325,7 @@ const app = new Vue({
                           app.loading = false;
                           app.loading_text = "";
                           app.dialog  =true;
+                          app.e1 = 3;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
