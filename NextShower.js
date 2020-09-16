@@ -8,6 +8,7 @@ const app = new Vue({
     vuetify: new Vuetify(),
     data () {
         return {
+            reg_failed: false,
             login: false,
             personName: null,
             itemsPerPage: 4,
@@ -172,6 +173,12 @@ const app = new Vue({
                         exit.hidden = false;
                     });
                 });
+            }).then(() => {
+                console.log("ok");
+
+            }).catch(err => {
+                console.log("error");
+                app.reg_failed = true;
             });
         },
 
@@ -206,6 +213,7 @@ const app = new Vue({
 
             }).catch(err => {
                 console.log("error");
+                app.reg_failed = true;
             });
 
   
@@ -310,13 +318,13 @@ const app = new Vue({
                           });
                           app.familycards.push({"name": app.parent, "image": app.imgpath, "gen": app.gen_parents[app.parent], flex: 12});
                           app.stp2 = true;
-                          this.loading = false;
-                          this.loading_text = "";
-                          this.dialog  =true;
+                          app.loading = false;
+                          app.loading_text = "";
+                          app.dialog  =true;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
-                        this.loading_text = "error encountered";
+                        app.loading_text = "error encountered";
                       });
 
                 }
