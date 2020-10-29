@@ -8,6 +8,8 @@ const app = new Vue({
     vuetify: new Vuetify(),
     data () {
         return {
+            names: [],
+            names_selected: [],
             reg_failed: false,
             login: false,
             personName: null,
@@ -33,6 +35,7 @@ const app = new Vue({
             password: undefined,
             err: false,
             scss:false,
+            upload_failed: false,
             rules: {
                 email: v => !!(v || '').match(/@/) || 'נא להקליד כתובת מייל תקנית',
                 password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z]).{7,}/) ||
@@ -45,6 +48,7 @@ const app = new Vue({
             title: 'מי ראשון למקלחת?',
             vrow: false,
             familycards: [],
+            familycards_selected: [],
             gen_index:{"בן": "m", "בת": "f"},
             order_dictionary : {
 
@@ -79,7 +83,21 @@ const app = new Vue({
             signbtn: true
         }
     },
+    computed: {
+        All() {
+            return this.names_selected.length === this.names.length
+        },
+        Some() {
+            return this.names_selected.length > 0 && !this.All
+        },
+        icon() {
+            if (this.All) return 'mdi-close-box'
+            if (this.Some) return 'mdi-minus-box'
+            return 'mdi-checkbox-blank-outline'
+        },
+    },
     methods: {
+
 
 
         turn_off_signbtn() {
@@ -91,6 +109,15 @@ const app = new Vue({
             this.signbtn = true;
         },
 
+        toggle () {
+            this.$nextTick(() => {
+            if (this.All) {
+                this.names_selected = []
+            } else {
+                this.names_selected = this.names.slice()
+            }
+            })
+        },
 
         login_true()
         {
@@ -109,6 +136,12 @@ const app = new Vue({
                       querySnapshot.forEach(function (doc) {
                           console.log(doc.data().familycards);
                           app.familycards = doc.data().familycards;
+                          app.familycards_selected = doc.data().familycards;
+                          for (i = 0; i < app.familycards.length; i++)
+                          {
+                            app.names.push(app.familycards[i].name);
+                            app.names_selected.push(app.familycards[i].name);
+                          }
                           app.login= false;
                           app.welcome = "שלום, משפחת " + doc.data().family + "!";
   
@@ -163,6 +196,12 @@ const app = new Vue({
                     querySnapshot.forEach(function (doc) {
                         console.log(doc.data().familycards);
                         app.familycards = doc.data().familycards;
+                        app.familycards_selected = doc.data().familycards;
+                        for (i = 0; i < app.familycards.length; i++)
+                        {
+                          app.names.push(app.familycards[i].name);
+                          app.names_selected.push(app.familycards[i].name);
+                        }
                         app.login= false;
                         app.welcome = "שלום, משפחת " + doc.data().family + "!";
 
@@ -245,11 +284,13 @@ const app = new Vue({
             var faces_div = document.getElementById("faces");
             faces_div.hidden = true;
 
-            this.title ='מי ראשון למקלחת?';
+            app.title ='מי ראשון למקלחת?';
 
             setTimeout(function(){
 
-            app.title = app.familycards[0].name +"!";
+            app.title = app.familycards_selected[0].name +"!";
+
+            
 
             var div = document.getElementById("circles");
             div.hidden = true;
@@ -260,6 +301,7 @@ const app = new Vue({
             }, 5000);
 
             let array2 = [];
+            this.familycards_selected = [];
             while (this.familycards.length != 0)
             {
                 let randomIndex = Math.floor(Math.random() * this.familycards.length);
@@ -268,6 +310,15 @@ const app = new Vue({
 
             }
             this.familycards = array2;
+            for (i = 0; i < this.familycards.length; i++)
+            {
+                if (this.names_selected.includes( this.familycards[i].name))
+                {
+                    this.familycards_selected.push(this.familycards[i]);
+                }
+        
+            }
+            
         }
         else
         {
@@ -344,7 +395,10 @@ const app = new Vue({
 
       loadPersonImage()
       {
-        console.log("loadImage");          //checks if files are selected
+        console.log("loadImage"); 
+        this.dialog  =false;
+        this.loading = true;
+        this.loading_text = "טוען קובץ תמונה..."         //checks if files are selected
         if (this.personFiles) {
 
             //create a storage reference
@@ -379,12 +433,19 @@ const app = new Vue({
                         console.log(url);
                         app.personImage =  url;
                           app.familycards.push({"name": app.personName, "image": app.personImage, "gen":  app.gen_index[app.gender], flex: 12});
+                          app.loading = false;
+                          app.loading_text = "";
+                          app.dialog  =true;
                       })
                       .catch(function(error) {
                         console.log("error encountered");
+                        app.loading = false;
+                        app.loading_text = "";
+                        app.dialog  =true;
                       });
                       app.addPersonDialog = false;
                       app.personFiles = null;
+                      app.upload_failed = true;
 
                 }
             );
@@ -406,7 +467,7 @@ const app = new Vue({
           });
           this.dialog=false;
           this.scss = true;
-          app.welcome = "שלום משפחת " + app.family
+          app.welcome = "שלום, משפחת " + app.family + "!"
 
           var enter = document.getElementById("enter");
           enter.hidden = true;
