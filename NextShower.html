@@ -340,6 +340,16 @@
 </v-dialog>
 
 
+<v-dialog v-model="upload_failed">
+  <v-alert
+  dense
+  type="error"
+>
+העלאת תמונה נכשלה
+</v-alert>
+</v-dialog>
+
+
           <div id="enter">
             <v-btn text small 
             @click="login_true" > כניסה 
@@ -429,7 +439,7 @@
         type="password"
       ></v-text-field>
     </v-form>
-    <v-btn color="purple" dark @click="loginPerson">כניסה</v-btn>
+    <v-btn color="cyan darken-2" dark @click="loginPerson">כניסה</v-btn>
   </v-dialog>
 
 
@@ -437,7 +447,43 @@
           <v-layout row justify-center class="ma-5">
             <v-flex xs12 sm8>
                 <div class="my-2" center style="width:100%">
-                  <v-btn block x-large tile rounded color="purple" dark @click="Changed()"  > <h2>{{title}}</h2></v-btn>
+                  <v-select
+
+                  background-color="cyan darken-1"
+                  dark
+
+                  label="מי משתתף בהגרלה?"
+                  reverse
+                  v-model = "names_selected"
+                  :items="names"
+                  multiple
+                  small-chips
+                  flat
+                  hide-no-data
+                  hide-details
+                  append-icon=""
+                  clearable
+                  disable-lookup
+                  open-on-clear
+                  dense
+                  filled
+                  :menu-props="{ top: false, offsetY: true }"
+                  >
+      
+                  <template v-slot:selection="{ item, index }">
+                      <v-chip small v-if="names_selected.length < names.length">
+                        <span>{{ item }}</span>
+                      </v-chip>
+                      <v-chip small v-if="index === (names.length -1)">
+                          <span>כולם</span>
+                        </v-chip>
+                    </template>
+              
+              
+              </v-select>
+
+
+                  <v-btn block x-large tile rounded color="cyan darken-2" dark @click="Changed()"  > <h2>{{title}}</h2></v-btn>
 
                   <div class="text-center" id="circles" hidden="true">
                     <div>
@@ -490,7 +536,7 @@
 
                   <v-row dense>
                     <v-col
-                      v-for="card in familycards"
+                      v-for="card in familycards_selected"
                       :key="card.name"
                       :cols="card.flex"
                     >
@@ -501,7 +547,7 @@
                         gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"  
                         >
                       </v-avatar>
-                    <v-card-title class="justify-center align-center headline mb-2 font-weight-bold" v-text="card.name + ' ' + (order_dictionary[familycards.indexOf(card) + '_' +card.gen])"></v-card-title>
+                    <v-card-title class="justify-center align-center headline mb-2 font-weight-bold" v-text="card.name + ' ' + (order_dictionary[familycards_selected.indexOf(card) + '_' +card.gen])"></v-card-title>
                     </v-col>
                   </v-row>
                 </div>
@@ -528,7 +574,7 @@
           </v-col>
           <v-col cols="6">
             <v-progress-linear
-              color="deep-purple accent-4"
+              color="deep-cyan darken-2 accent-4"
               :active="loading"
               :indeterminate="loading"
               rounded
