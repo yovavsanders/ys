@@ -34,6 +34,7 @@ const app = new Vue({
             isLoading: false,
             password: undefined,
             err: false,
+            err_names: false,
             scss:false,
             upload_failed: false,
             rules: {
@@ -196,12 +197,12 @@ const app = new Vue({
                     querySnapshot.forEach(function (doc) {
                         console.log(doc.data().familycards);
                         app.familycards = doc.data().familycards;
-                        app.familycards_selected = doc.data().familycards;
-                        for (i = 0; i < app.familycards.length; i++)
-                        {
-                          app.names.push(app.familycards[i].name);
-                          app.names_selected.push(app.familycards[i].name);
-                        }
+                        //app.familycards_selected = doc.data().familycards;
+                        // for (i = 0; i < app.familycards.length; i++)
+                        // {
+                        //   app.names.push(app.familycards[i].name);
+                        //   app.names_selected.push(app.familycards[i].name);
+                        // }
                         app.login= false;
                         app.welcome = "שלום, משפחת " + doc.data().family + "!";
 
@@ -276,7 +277,7 @@ const app = new Vue({
       {
 
 
-        if (app.familycards.length > 0)
+        if (app.familycards.length > 0 && app.names_selected.length > 0)
         {
             var div = document.getElementById("circles");
             div.hidden = false;
@@ -322,7 +323,14 @@ const app = new Vue({
         }
         else
         {
-            app.err = true;
+            if (app.familycards.length == 0 && app.names_selected.length == 0)
+            {
+                app.err = true;
+            }
+            if(app.familycards.length > 0 && app.names_selected.length == 0)
+            {
+                app.err_names = true;
+            }
         }
 
       },
@@ -494,6 +502,13 @@ const app = new Vue({
             app.title ='מי ראשון למקלחת?';
 
             app.turn_on_signbtn();
+            app.familycards = [];
+            app.familycards_selected = [];
+            app.names = [];
+            app.names_selected = [];
+
+            app.password = "";
+            app.email = "";
 
           }).catch(function(error) {
             console.log("Sign-out Error.");
