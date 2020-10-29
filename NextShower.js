@@ -140,8 +140,14 @@ const app = new Vue({
                           app.familycards_selected = doc.data().familycards;
                           for (i = 0; i < app.familycards.length; i++)
                           {
-                            app.names.push(app.familycards[i].name);
-                            app.names_selected.push(app.familycards[i].name);
+                            if (!app.names.includes(app.familycards[i].name))
+                            {
+                                app.names.push(app.familycards[i].name);
+                            }
+                            if (!app.names_selected.includes(app.familycards[i].name))
+                            {
+                                app.names_selected.push(app.familycards[i].name);
+                            }
                           }
                           app.login= false;
                           app.welcome = "שלום, משפחת " + doc.data().family + "!";
