@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+    <title>Coins</title>
+
+
+    <p id="myName"></p>
+    <p id="myValues"></p>
+    <p id="myValuesBnb"></p>
+    <p id="myDate"></p>
+
+
+</head>
+
+
+<body>
+
+
+    <script>
+
+
+function getTimeStamp(timestamp){
+		if ((timestamp >= 10E7) && (timestamp < 18E7)) {
+
+				return false;
+    }
+    if ((timestamp >= 1E16) || (timestamp <= -1E16)) {
+        timestamp = Math.floor(timestamp / 1000000);
+    } else if ((timestamp >= 1E14) || (timestamp <= -1E14)) {
+        timestamp = Math.floor(timestamp / 1000);
+    } else if ((timestamp >= 1E11) || (timestamp <= -3E10)) {
+console.log("L");
+    } else {
+				console.log("P");;
+        if ((timestamp > 1E11) || (timestamp < -1E10)) {
+				console.log("K");
+        }
+        timestamp = (timestamp * 1000);
+    }
+    if (timestamp < -68572224E5) {
+
+				return false;
+		}
+		return parseInt(timestamp, 10);
+}
+
+function ConvertTime(time){
+		var timestamp = getTimeStamp(time);
+            console.log(moment(timestamp).toDate());
+            console.log(moment(timestamp).fromNow());
+            return moment(timestamp).toDate() + " " + "("  + moment(timestamp).fromNow() + ")";
+        
+	
+}
+
+        /**
+         * Get HTML asynchronously
+         * @param  {String}   url      The URL to get HTML from
+         * @param  {Function} callback A callback funtion. Pass in "response" variable to use returned HTML.
+         */
+
+
+        // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        // //const url = "https://yovavsanders.github.io/govmap/parcel_address.html";
+        // const url = "https://api.cryptowat.ch/markets/kraken/btceur/price"
+        // $.get(proxyurl + url).then(function (html) {
+        //     console.log(html);
+
+        // });
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const id = urlParams.get('id');
+
+
+        var name = document.getElementById("myName");
+        var values = document.getElementById("myValues");
+        var values_bnb = document.getElementById("myValuesBnb");
+        var date = document.getElementById("myDate");
+        var data;
+        $.ajax({
+				dataType: 'json',
+				beforeSend : function() { 
+                    console.log("sending...");
+				},
+				success: function(json_data) {
+					{
+                        console.log(json_data);	
+                        data = json_data;
+                        document.getElementById("myName").innerText = "Name: " + data.data.name + ". Symbol: " + data.data.symbol;
+                        values.innerText = "Price: " + data.data.price;
+                        values_bnb.innerText = "price_BNB: " + data.data.price_BNB;
+                        date.innerText = "Updated: " + ConvertTime(data.updated_at);
+
+
+					}
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("Error occurred: " + errorThrown);
+				},
+				url: "https://api.pancakeswap.info/api/v2/tokens/" + id
+			});
+
+    </script>
+
+    
+</body>
+</html>
