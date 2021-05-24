@@ -314,7 +314,7 @@ function getValue(id){
                                     obj = {
                                         name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
                                         id: id,
-                                        price: last,
+                                        price: last.toFixed(10),
                                         notice_price: 1.3,
                                         percent_change: 1,
                                     }
@@ -433,7 +433,7 @@ function applyValue(id){
                                     obj = {
                                         name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
                                         id: data.data.ethereum.dexTrades[0].baseCurrency.address,
-                                        price: last,
+                                        price: last.toFixed(10),
                                         notice_price: 1.3,
                                         percent_change: 1,
                                     }
@@ -561,7 +561,7 @@ function insertValue(id){
                                     obj = {
                                         name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
                                         id: data.data.ethereum.dexTrades[0].baseCurrency.address,
-                                        price: last,
+                                        price: last.toFixed(10),
                                         notice_price: 1.3,
                                         percent_change: 1,
                                     }
