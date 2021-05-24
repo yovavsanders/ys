@@ -191,6 +191,25 @@
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script>
 
+
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+var today = new Date();
+var date = formatDate(today);
+
 var ids = ['0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51',
             '0xf9c037d9f7ad40c944ffa179f0dbd89531d44649',
             '0x0523215dcafbf4e4aa92117d13c6985a3bef27d7',
@@ -201,7 +220,7 @@ function getValue(id){
     const query = `query{
                             ethereum(network: bsc){
                                 dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
-                                date: {since: "2021-05-23"}
+                                date: {since: "`+date+`"}
                                 baseCurrency: {is: "`+id+`"}
                                 ) {
 
@@ -294,7 +313,7 @@ function getValue(id){
                                     data.data.ethereum.dexTrades[0].baseCurrency.symbol;
                                     obj = {
                                         name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
-                                        id: data.data.ethereum.dexTrades[0].baseCurrency.address,
+                                        id: id,
                                         price: last,
                                         notice_price: 1.3,
                                         percent_change: 1,
@@ -321,7 +340,7 @@ function applyValue(id){
     const query = `query{
                             ethereum(network: bsc){
                                 dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
-                                date: {since: "2021-05-23"}
+                                date: {since: "`+date+`"}
                                 baseCurrency: {is: "`+id+`"}
                                 ) {
 
@@ -450,7 +469,7 @@ function insertValue(id){
     const query = `query{
                             ethereum(network: bsc){
                                 dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
-                                date: {since: "2021-05-23"}
+                                date: {since: "`+date+`"}
                                 baseCurrency: {is: "`+id+`"}
                                 ) {
 
