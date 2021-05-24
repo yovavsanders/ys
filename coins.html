@@ -542,6 +542,7 @@ function insertValue(id){
                                         percent_change: 1,
                                     }
                                     appVue.coins.push(obj);
+                                    appVue.dialog = false;
                                 }
                                 else{
                                     appVue.editedItem.id = "Wrong Coin ID..."
@@ -676,7 +677,6 @@ var appVue = new Vue({
           //this.coins.push(this.editedItem)
           insertValue(this.editedItem.id);
         }
-        this.close()
       },
       apply () {
         if (this.editedIndex > -1) {
