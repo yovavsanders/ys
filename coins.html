@@ -1,102 +1,306 @@
+
+
+
 <html lang="en">
 <head>
+    <title>BitqueryCoins</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
-    <title>Coins</title>
-
-
-    <p id="myName"></p>
-    <p id="myValues"></p>
-    <p id="myValuesBnb"></p>
-    <p id="myDate"></p>
-
+    <meta name="viewport"content="width = device-width, initial-scale = 1"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 
 </head>
 
-
 <body>
+    <div id="app" style="height: 800px">
+        <v-app >
+            <v-main>
+                <v-data-table
+                :headers="headers"
+                :items="coins"
+                sort-by="id"
+                class="elevation-1"
+              >
+                <template v-slot:top>
+                  <v-toolbar
+                    flat
+                  >
+                    <v-toolbar-title>Bitquery Coins</v-toolbar-title>
+                    <v-divider
+                      class="mx-4"
+                      inset
+                      vertical
+                    ></v-divider>
+                    <h5> WBNB Value: {{wbnb}} $</h5>
+                    <v-spacer></v-spacer>
+                    <v-dialog
+                      v-model="dialog"
+                      max-width="500px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          color="primary"
+                          dark
+                          class="mb-2"
+                          v-bind="attrs"
+                          v-on="on"
+                        >
+                          הוסף מטבע
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="headline">{{ formTitle }}</span>
+                        </v-card-title>
+            
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                                <v-col
+                                cols="12"
+                                sm="12"
+                                md="12"
+                              >
+                                <v-text-field
+                                  v-model="editedItem.id"
+                                  label="Coin ID"
+                                ></v-text-field>
+                              </v-col>
+                              <v-col
+                                cols="12"
+                                sm="6"
+                                md="4"
+                              >
+                                <v-text-field
+                                  v-model="editedItem.name"
+                                  label="Coin name"
+                                ></v-text-field>
+                              </v-col>
+                              <v-col
+                                cols="12"
+                                sm="6"
+                                md="4"
+                              >
+                                <v-text-field
+                                  v-model="editedItem.price"
+                                  label="Current Price ($)"
+                                ></v-text-field>
+                              </v-col>
+                              <v-col
+                                cols="12"
+                                sm="6"
+                                md="4"
+                              >
+                                <v-text-field
+                                  v-model="editedItem.notice_price"
+                                  label="Notice Price ($)"
+                                ></v-text-field>
+                              </v-col>
+                              <v-col
+                              cols="12"
+                              sm="6"
+                              md="4"
+                            >
+                              <v-text-field
+                                v-model="editedItem.percent_change"
+                                label="Percent Change ($)"
+                              ></v-text-field>
+                            </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+            
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                          color="blue darken-1"
+                          text
+                          @click="apply"
+                        >
+                          Apply
+                        </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="close"
+                          >
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="save"
+                          >
+                            Save
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    <v-dialog v-model="dialogDelete" max-width="500px">
+                      <v-card>
+                        <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                          <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                          <v-spacer></v-spacer>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
+                </template>
+                <template v-slot:item.actions="{ item }">
+                  <v-icon
+                    small
+                    class="mr-2"
+                    @click="editItem(item)"
+                  >
+                    mdi-pencil
+                  </v-icon>
+                  <v-icon
+                    small
+                    @click="deleteItem(item)"
+                  >
+                    mdi-delete
+                  </v-icon>
+                </template>
+                <template v-slot:no-data>
+                  <v-btn
+                    color="primary"
+                    @click="initialize"
+                  >
+                    Reset
+                  </v-btn>
+                </template>
+              </v-data-table>
 
 
+
+
+
+
+            </v-main>
+        </v-app>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script>
 
+var ids = ['0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51',
+            '0xf9c037d9f7ad40c944ffa179f0dbd89531d44649',
+            '0x0523215dcafbf4e4aa92117d13c6985a3bef27d7',
+            '0x1ff2a2c2deadb17b6ba9949393d1406f4c61bfc9',
+            '0xe29ac6ea53dea5211155f9d7c8c41beee852efa0']
 
-function getTimeStamp(timestamp){
-		if ((timestamp >= 10E7) && (timestamp < 18E7)) {
+function getValue(id){
+    const query = `query{
+                            ethereum(network: bsc){
+                                dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
+                                date: {since: "2021-05-23"}
+                                baseCurrency: {is: "`+id+`"}
+                                ) {
 
-				return false;
-    }
-    if ((timestamp >= 1E16) || (timestamp <= -1E16)) {
-        timestamp = Math.floor(timestamp / 1000000);
-    } else if ((timestamp >= 1E14) || (timestamp <= -1E14)) {
-        timestamp = Math.floor(timestamp / 1000);
-    } else if ((timestamp >= 1E11) || (timestamp <= -3E10)) {
-console.log("L");
-    } else {
-				console.log("P");;
-        if ((timestamp > 1E11) || (timestamp < -1E10)) {
-				console.log("K");
-        }
-        timestamp = (timestamp * 1000);
-    }
-    if (timestamp < -68572224E5) {
+                                    block {
+                                    timestamp {
+                                        time (format: "%Y-%m-%d %H:%M:%S")
+                                    }
+                                    height
+                                    }
 
-				return false;
-		}
-		return parseInt(timestamp, 10);
-}
+                                    tradeIndex
+                                    protocol
+                                    exchange {
+                                    fullName
+                                    }
 
-function ConvertTime(time){
-		var timestamp = getTimeStamp(time);
-            console.log(moment(timestamp).toDate());
-            console.log(moment(timestamp).fromNow());
-            return moment(timestamp).toDate() + " " + "("  + moment(timestamp).fromNow() + ")";
-        
-	
-}
+                                    smartContract {
+                                    address {
+                                        address
+                                        annotation
+                                    }
+                                    }
 
-        /**
-         * Get HTML asynchronously
-         * @param  {String}   url      The URL to get HTML from
-         * @param  {Function} callback A callback funtion. Pass in "response" variable to use returned HTML.
-         */
+                                    baseAmount
+                                    baseCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    quoteAmount
+                                    quoteCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    transaction {
+                                    hash
+                                    }
+
+                                }
+                            }
+                        }`;
+
+            const url = "https://graphql.bitquery.io/";
+                const opts = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-KEY": "BQY26u6fCzxvORChCHYz83aXXufqrEUx"
+                },
+                body: JSON.stringify({
+                    query
+                })
+            };
 
 
-        // const proxyurl = "https://cors-anywhere.herokuapp.com/";
-        // //const url = "https://yovavsanders.github.io/govmap/parcel_address.html";
-        // const url = "https://api.cryptowat.ch/markets/kraken/btceur/price"
-        // $.get(proxyurl + url).then(function (html) {
-        //     console.log(html);
-
-        // });
-
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const id = urlParams.get('id');
-
-
-        var name = document.getElementById("myName");
-        var values = document.getElementById("myValues");
-        var values_bnb = document.getElementById("myValuesBnb");
-        var date = document.getElementById("myDate");
-        var data;
-        $.ajax({
+            $.ajax({
 				dataType: 'json',
 				beforeSend : function() { 
-                    console.log("sending...");
+                    //console.log("sending...");
 				},
 				success: function(json_data) {
 					{
-                        console.log(json_data);	
-                        data = json_data;
-                        document.getElementById("myName").innerText = "Name: " + data.data.name + ". Symbol: " + data.data.symbol;
-                        values.innerText = "Price: " + data.data.price;
-                        values_bnb.innerText = "Price_BNB: " + data.data.price_BNB;
-                        date.innerText = "Updated: " + ConvertTime(data.updated_at);
+                        //console.log(json_data);
+                        bnb = json_data.wbnb.usd;
+                        appVue.wbnb = bnb;
+                        //console.log(bnb);
+
+    
+                        fetch(url, opts)
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data);
+                                var total = 0;
+                                var count = 0;
+                                if (data.data.ethereum.dexTrades){
+                                    for (i = 0; i < data.data.ethereum.dexTrades.length; i++)
+                                    {
+                                        if (data.data.ethereum.dexTrades[i].quoteCurrency.symbol == "WBNB"){
+                                            //console.log((data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb);
+                                            total += (data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb;
+                                            count = count + 1;
+
+                                        }
+                                    }
+                                    avg = total / count;
+                                    console.log(data.data.ethereum.dexTrades[0].baseCurrency.symbol + ":  avg: " + avg);
+                                    data.data.ethereum.dexTrades[0].baseCurrency.symbol;
+                                    obj = {
+                                        name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
+                                        id: data.data.ethereum.dexTrades[0].baseCurrency.address,
+                                        price: avg,
+                                        notice_price: 1.3,
+                                        percent_change: 1,
+                                    }
+                                    appVue.coins.push(obj);
+                                }
+                            })
+                        .catch(console.error);
 
 
 					}
@@ -105,11 +309,392 @@ function ConvertTime(time){
 				error : function(jqXHR, textStatus, errorThrown) {
 					console.log("Error occurred: " + errorThrown);
 				},
-				url: "https://api.pancakeswap.info/api/v2/tokens/" + id
+				url: "https://api.coingecko.com/api/v3/simple/price?ids=WBNB&vs_currencies=usd"
 			});
+}
 
-    </script>
+
+
+function applyValue(id){
+    const query = `query{
+                            ethereum(network: bsc){
+                                dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
+                                date: {since: "2021-05-23"}
+                                baseCurrency: {is: "`+id+`"}
+                                ) {
+
+                                    block {
+                                    timestamp {
+                                        time (format: "%Y-%m-%d %H:%M:%S")
+                                    }
+                                    height
+                                    }
+
+                                    tradeIndex
+                                    protocol
+                                    exchange {
+                                    fullName
+                                    }
+
+                                    smartContract {
+                                    address {
+                                        address
+                                        annotation
+                                    }
+                                    }
+
+                                    baseAmount
+                                    baseCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    quoteAmount
+                                    quoteCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    transaction {
+                                    hash
+                                    }
+
+                                }
+                            }
+                        }`;
+
+            const url = "https://graphql.bitquery.io/";
+                const opts = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-KEY": "BQY26u6fCzxvORChCHYz83aXXufqrEUx"
+                },
+                body: JSON.stringify({
+                    query
+                })
+            };
+
+
+            $.ajax({
+				dataType: 'json',
+				beforeSend : function() { 
+                    //console.log("sending...");
+				},
+				success: function(json_data) {
+					{
+                        //console.log(json_data);
+                        bnb = json_data.wbnb.usd;
+                        //console.log(bnb);
 
     
+                        fetch(url, opts)
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data);
+                                var total = 0;
+                                var count = 0;
+                                if (data.data.ethereum.dexTrades){
+                                    for (i = 0; i < data.data.ethereum.dexTrades.length; i++)
+                                    {
+                                        if (data.data.ethereum.dexTrades[i].quoteCurrency.symbol == "WBNB"){
+                                            //console.log((data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb);
+                                            total += (data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb;
+                                            count = count + 1;
+
+                                        }
+                                    }
+                                    avg = total / count;
+                                    console.log(data.data.ethereum.dexTrades[0].baseCurrency.symbol + ":  avg: " + avg);
+                                    data.data.ethereum.dexTrades[0].baseCurrency.symbol;
+                                    obj = {
+                                        name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
+                                        id: data.data.ethereum.dexTrades[0].baseCurrency.address,
+                                        price: avg,
+                                        notice_price: 1.3,
+                                        percent_change: 1,
+                                    }
+                                    appVue.editedItem.name = obj.name;
+                                    appVue.editedItem.price = obj.price;
+                                    appVue.editedItem.notice_price = obj.notice_price;
+                                    appVue.editedItem.percent_change = obj.percent_change;
+                                    //appVue.coins.push(obj);
+                                }
+                                else{
+                                    appVue.editedItem.id = "Wrong Coin ID..."
+                                    appVue.editedItem.name = "";
+                                    appVue.editedItem.price = 0;
+                                    appVue.editedItem.notice_price = 0;
+                                    appVue.editedItem.percent_change = 0;
+                                }
+                            })
+                        .catch(console.error);
+
+
+					}
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("Error occurred: " + errorThrown);
+				},
+				url: "https://api.coingecko.com/api/v3/simple/price?ids=WBNB&vs_currencies=usd"
+			});
+}
+
+
+function insertValue(id){
+    const query = `query{
+                            ethereum(network: bsc){
+                                dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
+                                date: {since: "2021-05-23"}
+                                baseCurrency: {is: "`+id+`"}
+                                ) {
+
+                                    block {
+                                    timestamp {
+                                        time (format: "%Y-%m-%d %H:%M:%S")
+                                    }
+                                    height
+                                    }
+
+                                    tradeIndex
+                                    protocol
+                                    exchange {
+                                    fullName
+                                    }
+
+                                    smartContract {
+                                    address {
+                                        address
+                                        annotation
+                                    }
+                                    }
+
+                                    baseAmount
+                                    baseCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    quoteAmount
+                                    quoteCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    transaction {
+                                    hash
+                                    }
+
+                                }
+                            }
+                        }`;
+
+            const url = "https://graphql.bitquery.io/";
+                const opts = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-KEY": "BQY26u6fCzxvORChCHYz83aXXufqrEUx"
+                },
+                body: JSON.stringify({
+                    query
+                })
+            };
+
+
+            $.ajax({
+				dataType: 'json',
+				beforeSend : function() { 
+                    //console.log("sending...");
+				},
+				success: function(json_data) {
+					{
+                        //console.log(json_data);
+                        bnb = json_data.wbnb.usd;
+                        //console.log(bnb);
+
+    
+                        fetch(url, opts)
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data);
+                                var total = 0;
+                                var count = 0;
+                                if (data.data.ethereum.dexTrades){
+                                    for (i = 0; i < data.data.ethereum.dexTrades.length; i++)
+                                    {
+                                        if (data.data.ethereum.dexTrades[i].quoteCurrency.symbol == "WBNB"){
+                                            //console.log((data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb);
+                                            total += (data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb;
+                                            count = count + 1;
+
+                                        }
+                                    }
+                                    avg = total / count;
+                                    console.log(data.data.ethereum.dexTrades[0].baseCurrency.symbol + ":  avg: " + avg);
+                                    data.data.ethereum.dexTrades[0].baseCurrency.symbol;
+                                    obj = {
+                                        name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
+                                        id: data.data.ethereum.dexTrades[0].baseCurrency.address,
+                                        price: avg,
+                                        notice_price: 1.3,
+                                        percent_change: 1,
+                                    }
+                                    appVue.coins.push(obj);
+                                }
+                                else{
+                                    appVue.editedItem.id = "Wrong Coin ID..."
+                                    appVue.editedItem.name = "";
+                                    appVue.editedItem.price = 0;
+                                    appVue.editedItem.notice_price = 0;
+                                    appVue.editedItem.percent_change = 0;
+                                }
+                            })
+                        .catch(console.error);
+
+
+					}
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("Error occurred: " + errorThrown);
+				},
+				url: "https://api.coingecko.com/api/v3/simple/price?ids=WBNB&vs_currencies=usd"
+			});
+}
+
+
+for (i =0; i < ids.length; i++)
+{
+    getValue(ids[i]);
+}
+
+    
+
+var appVue = new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: () => ({
+      wbnb: "",
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: 'שם מטבע',
+          align: 'start',
+          sortable: false,
+          value: 'name',
+        },
+        { text: 'הזן כתובת מטבע', value: 'id' },
+        { text: 'מחיר נוכחי', value: 'price' },
+        { text: 'תן התראה כאשר המחיר מגיע ל', value: 'notice_price' },
+        { text: 'שינוי באחוזים', value: 'percent_change' },
+        { text: 'פעולות', value: 'actions', sortable: false },
+      ],
+      coins: [],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        id: '',
+        price: 0.0,
+        notice_price: 0,
+        percent_change: 0,
+      },
+      defaultItem: {
+        name: '',
+        id: '',
+        price: 0,
+        notice_price: 0,
+        percent_change: 0,
+      },
+    }),
+
+    computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'הוסף מטבע' : 'Edit Item'
+      },
+    },
+
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+      dialogDelete (val) {
+        val || this.closeDelete()
+      },
+    },
+
+    created () {
+      this.initialize()
+    },
+
+    methods: {
+      initialize () {
+        this.coins = [
+   
+        ]
+      },
+
+      editItem (item) {
+        this.editedIndex = this.coins.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        this.editedIndex = this.coins.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      },
+
+      deleteItemConfirm () {
+        this.coins.splice(this.editedIndex, 1)
+        this.closeDelete()
+      },
+
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.coins[this.editedIndex], this.editedItem)
+        } else {
+          //this.coins.push(this.editedItem)
+          insertValue(this.editedItem.id);
+        }
+        this.close()
+      },
+      apply () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.coins[this.editedIndex], this.editedItem)
+        } else {
+          //this.coins.push(this.editedItem)
+          applyValue(this.editedItem.id);
+        }
+      },
+    },
+});
+
+
+    </script>
 </body>
 </html>
+
+
+
+
+
