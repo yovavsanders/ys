@@ -1,6 +1,3 @@
-
-
-
 <html lang="en">
 <head>
     <title>BitqueryCoins</title>
@@ -189,7 +186,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-firestore.js"></script>
+
     <script>
+
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyDoJZqTI6lEKP6IDnG10wTFQZwUgOXirbM",
+        authDomain: "coinsmsg.firebaseapp.com",
+        projectId: "coinsmsg",
+        storageBucket: "coinsmsg.appspot.com",
+        messagingSenderId: "228146426576",
+        appId: "1:228146426576:web:a991b3c4e432d097e064d5",
+        measurementId: "G-22JN0MGT6W"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
 
 
@@ -311,14 +327,37 @@ function getValue(id){
                                     var last = (data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb
                                     console.log(data.data.ethereum.dexTrades[0].baseCurrency.symbol + ":  last: " + last);
                                     data.data.ethereum.dexTrades[0].baseCurrency.symbol;
-                                    obj = {
-                                        name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
-                                        id: id,
-                                        price: last.toFixed(20),
-                                        notice_price: 1.3,
-                                        percent_change: 1,
-                                    }
-                                    appVue.coins.push(obj);
+
+       
+
+                                    db.collection("coins").where("id", "==", id)
+                                    .get()
+                                    .then((querySnapshot) => {
+                                        querySnapshot.forEach((doc) => {
+                                            console.log("ok");
+                                            db.collection('coins').doc(doc.id).update({
+                                                price: last.toFixed(20),
+
+                                            });
+
+                                            obj = {
+                                                name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
+                                                id: id,
+                                                price: last.toFixed(20),
+                                                notice_price: doc.data().notice_price,
+                                                percent_change: doc.data().percent_change,
+                                            }
+                                            
+                                            appVue.coins.push(obj);
+                                            
+                                        });
+                                    })
+                                    .catch((error) => {
+                                        console.log("Error getting documents: ", error);
+                                    });
+
+
+        
                                 }
                             })
                         .catch(console.error);
@@ -434,13 +473,14 @@ function applyValue(id){
                                         name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
                                         id: data.data.ethereum.dexTrades[0].baseCurrency.address,
                                         price: last.toFixed(20),
-                                        notice_price: 1.3,
-                                        percent_change: 1,
+                                        notice_price: appVue.editedItem.notice_price,
+                                        percent_change: appVue.editedItem.percent_change
                                     }
                                     appVue.editedItem.name = obj.name;
                                     appVue.editedItem.price = obj.price;
-                                    appVue.editedItem.notice_price = obj.notice_price;
-                                    appVue.editedItem.percent_change = obj.percent_change;
+
+
+    
                                     //appVue.coins.push(obj);
                                 }
                                 else{
@@ -562,11 +602,23 @@ function insertValue(id){
                                         name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
                                         id: data.data.ethereum.dexTrades[0].baseCurrency.address,
                                         price: last.toFixed(20),
-                                        notice_price: 1.3,
-                                        percent_change: 1,
+                                        notice_price: appVue.editedItem.notice_price,
+                                        percent_change: appVue.editedItem.percent_change,
                                     }
                                     appVue.coins.push(obj);
                                     appVue.dialog = false;
+
+                                    db.collection('coins').add(
+                                    {
+                                        name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
+                                        id: data.data.ethereum.dexTrades[0].baseCurrency.address,
+                                        price: last.toFixed(20),
+                                        notice_price: appVue.editedItem.notice_price,
+                                        percent_change: appVue.editedItem.percent_change,
+                                    }
+                                    ).then(function(docRef) {
+                                        console.log(docRef.id);
+                                    });
                                 }
                                 else{
                                     appVue.editedItem.id = "Wrong Coin ID..."
@@ -590,10 +642,155 @@ function insertValue(id){
 }
 
 
-for (i =0; i < ids.length; i++)
-{
-    getValue(ids[i]);
+
+function updateValue(id){
+    const query = `query{
+                            ethereum(network: bsc){
+                                dexTrades(options:{desc: ["block.height","tradeIndex"], limit: 10},
+                                date: {since: "`+date+`"}
+                                baseCurrency: {is: "`+id+`"}
+                                ) {
+
+                                    block {
+                                    timestamp {
+                                        time (format: "%Y-%m-%d %H:%M:%S")
+                                    }
+                                    height
+                                    }
+
+                                    tradeIndex
+                                    protocol
+                                    exchange {
+                                    fullName
+                                    }
+
+                                    smartContract {
+                                    address {
+                                        address
+                                        annotation
+                                    }
+                                    }
+
+                                    baseAmount
+                                    baseCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    quoteAmount
+                                    quoteCurrency {
+                                    address
+                                    symbol
+                                    }
+
+                                    transaction {
+                                    hash
+                                    }
+
+                                }
+                            }
+                        }`;
+
+            const url = "https://graphql.bitquery.io/";
+                const opts = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-KEY": "BQY26u6fCzxvORChCHYz83aXXufqrEUx"
+                },
+                body: JSON.stringify({
+                    query
+                })
+            };
+
+
+            $.ajax({
+				dataType: 'json',
+				beforeSend : function() { 
+                    //console.log("sending...");
+				},
+				success: function(json_data) {
+					{
+                        //console.log(json_data);
+                        bnb = json_data.wbnb.usd;
+                        appVue.wbnb = bnb;
+                        //console.log(bnb);
+
+    
+                        fetch(url, opts)
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data);
+                                var total = 0;
+                                var count = 0;
+                                if (data.data.ethereum.dexTrades){
+                                    for (i = 0; i < data.data.ethereum.dexTrades.length; i++)
+                                    {
+                                        if (data.data.ethereum.dexTrades[i].quoteCurrency.symbol == "WBNB"){
+                                            //console.log((data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb);
+                                            total += (data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb;
+                                            count = count + 1;
+
+                                        }
+                                    }
+                                    i = data.data.ethereum.dexTrades.length - 1;
+                                    last = (data.data.ethereum.dexTrades[i].quoteAmount / data.data.ethereum.dexTrades[i].baseAmount) * bnb
+                                    console.log(data.data.ethereum.dexTrades[0].baseCurrency.symbol + ":  last: " + last);
+                                    data.data.ethereum.dexTrades[0].baseCurrency.symbol;
+                                    //appVue.coins.push(obj);
+                                    //appVue.dialog = false;
+
+                                    db.collection("coins").where("id", "==", id)
+                                    .get()
+                                    .then((querySnapshot) => {
+                                        querySnapshot.forEach((doc) => {
+                                            console.log(appVue.editedItem.notice_price)
+                                            db.collection('coins').doc(doc.id).update({
+                                                price: last.toFixed(20),
+                                                notice_price: appVue.editedItem.notice_price,
+                                                name: data.data.ethereum.dexTrades[0].baseCurrency.symbol,
+                                                id: data.data.ethereum.dexTrades[0].baseCurrency.address,
+                                                percent_change: appVue.editedItem.percent_change,
+
+
+                                            });
+                                        });
+
+                                    })
+                                    .catch((error) => {
+                                        console.log("Error getting documents: ", error);
+                                    });
+                                }
+                                else{
+                                    appVue.editedItem.id = "Wrong Coin ID..."
+                                    appVue.editedItem.name = "";
+                                    appVue.editedItem.price = 0;
+                                    appVue.editedItem.notice_price = 0;
+                                    appVue.editedItem.percent_change = 0;
+                                }
+                            })
+                        .catch(console.error);
+
+
+					}
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("Error occurred: " + errorThrown);
+				},
+				url: "https://api.coingecko.com/api/v3/simple/price?ids=WBNB&vs_currencies=usd"
+			});
 }
+
+
+db.collection('coins').get().then((snapshot)=> {
+    snapshot.docs.forEach(doc => {
+        console.log(doc.data().id)
+        getValue(doc.data().id);
+
+    });
+});
+
 
     
 
@@ -674,6 +871,15 @@ var appVue = new Vue({
       },
 
       deleteItemConfirm () {
+        console.log(this.coins[this.editedIndex]);
+        db.collection("coins").where("id", "==", this.coins[this.editedIndex].id)
+                                    .get()
+                                    .then((querySnapshot) => {
+                                        querySnapshot.forEach((doc) => {
+                                            console.log("del");
+                                            db.collection('coins').doc(doc.id).delete();
+                                        });
+                                    })
         this.coins.splice(this.editedIndex, 1)
         this.closeDelete()
       },
@@ -697,6 +903,8 @@ var appVue = new Vue({
       save () {
         if (this.editedIndex > -1) {
           Object.assign(this.coins[this.editedIndex], this.editedItem)
+          updateValue(this.editedItem.id);
+
         } else {
           //this.coins.push(this.editedItem)
           insertValue(this.editedItem.id);
@@ -717,7 +925,6 @@ var appVue = new Vue({
     </script>
 </body>
 </html>
-
 
 
 
