@@ -41,16 +41,31 @@
                 </v-toolbar>
                 <v-list two-line subheader>
                   <v-container>
-                    <v-subheader class="headline">{{today}}</v-subheader>
+                      <v-subheader class="headline">{{today}}</v-subheader>       
                     <v-spacer></v-spacer>
   
                     <p class="text-xs-right"><b>{{todos.length}}</b> מוצרים</p>
   
                     <v-flex xs12>
-                      <v-combobox right clearable v-model="newTodo" :items="historylist" id="newTodo" name="newTodo" placeholder="הוספת מוצר חדש" @keyup.enter="addTodo"
+                      <v-row>
+                        <v-combobox right clearable v-model="newTodo" :items="historylist" id="newTodo" name="newTodo" placeholder="הוספת מוצר חדש" @keyup.enter="addTodo"
                         :search-input.sync="search"
                         hide-selected
                       ></v-combobox>
+                        <v-btn
+                        style="margin-top: 8px"
+                        class="mx-2"
+                        fab
+                        dark
+                        small
+                        color="green" v-if="newTodo" @click="addTodo"
+                      >
+                        <v-icon dark>
+                          mdi-plus
+                        </v-icon>
+                      </v-btn>
+                      </v-row>
+ 
                     </v-flex>
                   </v-container>
                   <v-subheader class="subheading" v-if="todos.length == 0">יש 0 מוצרים ברשימה. הוסף מוצר</v-subheader>
