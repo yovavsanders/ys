@@ -48,7 +48,7 @@
   
                       <v-row>
                         <v-col 
-                        :cols="newTodo ? 10 : 12">
+                        :cols="search ? 10 : 12">
                           <v-combobox right clearable v-model="newTodo" :items="historylist" id="newTodo" name="newTodo" placeholder="הוספת מוצר חדש" @keyup.enter="addTodo"
                           :search-input.sync="search"
                           hide-selected
@@ -62,7 +62,7 @@
                           fab
                           dark
                           small
-                          color="green" v-if="newTodo" @click="addTodo"
+                          color="green" v-if="search" @click="addTodo"
                         >
                             <v-icon dark>
                               mdi-plus
