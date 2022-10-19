@@ -46,7 +46,7 @@
   
                     <p class="text-xs-right"><b>{{todos.length}}</b> מוצרים</p>
   
-                    <v-flex xs12>
+                 
                       <v-row>
                         <v-combobox right clearable v-model="newTodo" :items="historylist" id="newTodo" name="newTodo" placeholder="הוספת מוצר חדש" @keyup.enter="addTodo"
                         :search-input.sync="search"
@@ -66,7 +66,7 @@
                       </v-btn>
                       </v-row>
  
-                    </v-flex>
+                   
                   </v-container>
                   <v-subheader class="subheading" v-if="todos.length == 0">יש 0 מוצרים ברשימה. הוסף מוצר</v-subheader>
                   <div v-for="(todo, i) in todos">
